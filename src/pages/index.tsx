@@ -4,17 +4,11 @@ import Link from "next/link";
 import { LoadingSpinner } from "~/components/loading";
 import { RouterOutputs, api } from "~/utils/api";
 
-type Content = {
-  time: string,
-  steps: string[],
-  difficulty: string,
-  ingredients: string[],
-}
-
 type Recipe = RouterOutputs["recipes"]["getAll"][number];
 function RecipeView(props: Recipe) {
   const recipe = props;
-  const content: Content = JSON.parse(JSON.stringify(recipe.content));
+  // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
+  const content: any = recipe.content;
   return ( 
      <div className="pl-4 pr-4">
       <h2 className="text-5xl leading-loose font-normal text-pink-500">
