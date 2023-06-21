@@ -4,11 +4,12 @@ import Link from "next/link";
 import { api } from "~/utils/api";
 
 export default function Home() {
-  const hello = api.example.hello.useQuery({ text: "from tRPC" });
   const { isSignedIn, user } = useUser();
   if (!isSignedIn) {
     return null;
   }
+  const { data } = api.recipe.getAll.useQuery();
+
   return (
     <>
       <Head>
@@ -17,7 +18,8 @@ export default function Home() {
         <link rel="icon" href="/favicon.ico" />
       </Head>
       <main className="bg-lime-100 p-2.5 rounded-xl">
-        Hello { user.firstName }
+        <div>Hello { user.firstName }</div>
+        {data?.map((recipe) => <div key={recipe.id}>{recipe.content}</div>)}
       </main>
     </>
   );
