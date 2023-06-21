@@ -7,11 +7,11 @@ html {
 }
 
 body {
-  @apply h-full;
+  @apply bg-gray-900 text-gray-50 text-lg p-2.5 h-full;
 }
 
 div#__next {
-  @apply h-full;
+  @apply flex justify-center h-full;
 }
 
 main {
