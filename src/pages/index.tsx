@@ -5,10 +5,9 @@ import { LoadingSpinner } from "~/components/loading";
 import { RouterOutputs, api } from "~/utils/api";
 
 type Recipe = RouterOutputs["recipes"]["getAll"][number];
-
 function RecipeView(props: Recipe) {
   const recipe = props;
-  const content: any = recipe.content;
+  const content: any = JSON.parse(JSON.stringify(recipe.content));
   return ( 
      <div className="pl-4 pr-4">
       <h2 className="text-5xl leading-loose font-normal text-pink-500">
