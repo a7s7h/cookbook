@@ -50,14 +50,14 @@ function Step(step:string, index:number) {
     {index+1}. {step}
   </p>
 }
-function CreateRecipeWizard() {
+function TopView() {
   const { isSignedIn, user } = useUser();
   if (!isSignedIn) {
     return null;
   }
   return (
     <div className="flex w-full gap-3">
-      <input placeholder="Title" className="bg-transparent grow outline-none"/>
+      <input placeholder="Type something here..." className="bg-transparent grow outline-none"/>
       <img src={user.profileImageUrl} className="w-16 h-16 rounded-full"/>
     </div>
   );
@@ -82,14 +82,12 @@ export default function Home() {
         <meta name="description" content="Ash's best recipes" />
         <link rel="icon" href="/favicon.ico" />
       </Head>
-      <nav className="text-gray-800 bg-amber-200 p-4 mb-1 sticky top-0 rounded-xl">
-        {CreateRecipeWizard()}
+      <nav className="text-gray-800 border-b-2 border-slate-500 bg-stone-200 p-4 sticky top-0">
+        {TopView()}
       </nav>
-       <div className="flex">
-        <main className="bg-slate-700 p-4 rounded-xl">
-          {data?.map((recipe) => RecipeView(recipe))}
-        </main>
-      </div>
+      <main className="h-full overflow-auto bg-slate-800 p-4">
+        {data?.map((recipe) => RecipeView(recipe))}
+      </main>
     </>
   );
 }
