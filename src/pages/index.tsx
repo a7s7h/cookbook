@@ -19,7 +19,6 @@ function parsePrisma(json: Prisma.JsonValue) {
 type Recipe = RouterOutputs["recipes"]["getAll"][number];
 function RecipeView(props: Recipe) {
   const recipe = props;
-  // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
   const content: Content = parsePrisma(recipe.content);
   return ( 
      <div className="pl-4 pr-4">
@@ -56,11 +55,10 @@ function CreateRecipeWizard() {
   if (!isSignedIn) {
     return null;
   }
-
   return (
     <div className="flex w-full gap-3">
-      <img src={user.profileImageUrl} className="w-16 h-16 rounded-2xl"/>
       <input placeholder="Title" className="bg-transparent grow outline-none"/>
+      <img src={user.profileImageUrl} className="w-16 h-16 rounded-full"/>
     </div>
   );
 }
@@ -84,11 +82,11 @@ export default function Home() {
         <meta name="description" content="Ash's best recipes" />
         <link rel="icon" href="/favicon.ico" />
       </Head>
-      <div className="flex">
-        <aside className="text-gray-700 bg-orange-500 p-4 mr-2 w-3/12 rounded-xl">
-          {CreateRecipeWizard()}
-        </aside>
-        <main className="bg-slate-700 p-4 w-9/12 rounded-xl">
+      <nav className="text-gray-800 bg-amber-200 p-4 mb-1 sticky top-0 rounded-xl">
+        {CreateRecipeWizard()}
+      </nav>
+       <div className="flex">
+        <main className="bg-slate-700 p-4 rounded-xl">
           {data?.map((recipe) => RecipeView(recipe))}
         </main>
       </div>
