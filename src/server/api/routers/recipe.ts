@@ -13,15 +13,18 @@ export const recipeRouter = createTRPCRouter({
 
   create: privateProcedure.input(z.object({
        title: z.string(),
-       content: z.string(),
+       content: z.object({
+        time: z.string(),
+        steps: z.array(z.string()),
+        difficulty: z.string(),
+        ingredients: z.array(z.string()),
+      }),
     }))
     .mutation(async ({ ctx, input }) => {
-       const authorId = ctx.userId;
-
        const recipe = await ctx.prisma.recipe.create({
          data: {
            title: input.title,
-           content: input.content??'{}',
+           content: input.content,
          }
        });
        return recipe;

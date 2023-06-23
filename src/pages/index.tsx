@@ -61,6 +61,12 @@ function TopView() {
       void ctx.recipes.getAll.invalidate();
     }
   });
+  const content: Content = { 
+    time: "20 min", 
+    steps:["Provide necessary steps here..."], 
+    difficulty: "easy",
+    ingredients: ["Any possible ingredient..."]
+  };
   return (
     <div className="flex w-full gap-3">
       <input type="text" placeholder="Type something here..." 
@@ -68,7 +74,7 @@ function TopView() {
         value={input} onChange={(e) => setInput(e.target.value)}
         disabled={isPosting}/>
       <img src={user?.profileImageUrl} className="w-16 h-16 rounded-full"/>
-      <button onClick={() => mutate({ title: input })}>Post</button>
+      <button onClick={() => mutate({ title: input, content: content })}>Post</button>
     </div>
   );
 }
