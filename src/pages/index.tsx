@@ -2,6 +2,7 @@ import { useUser } from "@clerk/nextjs";
 import { Prisma } from "@prisma/client";
 import Head from "next/head";
 import Link from "next/link";
+import { useState } from "react";
 import { LoadingSpinner } from "~/components/loading";
 import { RouterOutputs, api } from "~/utils/api";
 
@@ -51,30 +52,40 @@ function Step(step:string, index:number) {
   </p>
 }
 function TopView() {
-  const { isSignedIn, user } = useUser();
-  if (!isSignedIn) {
-    return null;
-  }
+  const { user } = useUser();
+  const [ input, setInput ] = useState("");
+  const ctx = api.useContext();
+  const { mutate, isLoading: isPosting } = api.recipes.create.useMutation({
+    onSuccess: () => {
+      setInput("");
+      void ctx.recipes.getAll.invalidate();
+    }
+  });
   return (
     <div className="flex w-full gap-3">
-      <input placeholder="Type something here..." className="bg-transparent grow outline-none"/>
-      <img src={user.profileImageUrl} className="w-16 h-16 rounded-full"/>
+      <input type="text" placeholder="Type something here..." 
+        className="bg-transparent grow outline-none"
+        value={input} onChange={(e) => setInput(e.target.value)}
+        disabled={isPosting}/>
+      <img src={user?.profileImageUrl} className="w-16 h-16 rounded-full"/>
+      <button onClick={() => mutate({ title: input })}>Post</button>
     </div>
   );
 }
 
-export default function Home() {
+function Recipes() {
   const { isSignedIn } = useUser();
   if (!isSignedIn) {
     return null;
   }
-
   const { data, isLoading } = api.recipes.getAll.useQuery();
-
   if (isLoading) {
     return LoadingSpinner();
   }
+  return data?.map((recipe) => RecipeView(recipe));
+}
 
+export default function Home() {
   return (
     <>
       <Head>
@@ -83,10 +94,10 @@ export default function Home() {
         <link rel="icon" href="/favicon.ico" />
       </Head>
       <nav className="text-gray-800 border-b-2 border-slate-500 bg-stone-200 p-4 sticky top-0">
-        {TopView()}
+        <TopView/>
       </nav>
       <main className="h-full overflow-auto bg-slate-800 p-4">
-        {data?.map((recipe) => RecipeView(recipe))}
+        <Recipes/>
       </main>
     </>
   );
