@@ -13,7 +13,7 @@ export const recipeRouter = createTRPCRouter({
 
   create: privateProcedure.input(z.object({
        title: z.string(),
-       content: z.any(),
+       content: z.string(),
     }))
     .mutation(async ({ ctx, input }) => {
        const authorId = ctx.userId;
