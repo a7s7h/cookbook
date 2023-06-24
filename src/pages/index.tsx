@@ -29,12 +29,15 @@ function RecipeView(props: Recipe) {
           {recipe.title}
         </Link>
       </h2>
-      <div className="columns-3">
-        <CldImage className="rounded-xl" width="300" alt="breakfast" height="300" src="samples/breakfast.jpg"/>
+      <div className="flex">
+        <div>
+          <CldImage className="rounded-xl" width="300" height="300" alt="" 
+            src="samples/breakfast.jpg"/>
+        </div>
         <ul className="pl-4 mt-2 list-item">{
           content.ingredients?.map((ingredient:string) => {
             return Ingredient(ingredient);
-          })}
+          })}          
         </ul>
       </div>
       <div className="mt-8">{
