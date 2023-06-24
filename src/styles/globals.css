@@ -7,7 +7,7 @@ html {
 }
 
 body {
-  @apply h-full bg-gray-900 text-gray-50 text-lg;
+  @apply h-full bg-slate-800 text-gray-50 text-lg;
 }
 
 div#__next {

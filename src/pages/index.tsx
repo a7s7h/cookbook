@@ -5,6 +5,7 @@ import Link from "next/link";
 import { useState } from "react";
 import { LoadingSpinner } from "~/components/loading";
 import { RouterOutputs, api } from "~/utils/api";
+import { CldImage } from "next-cloudinary";
 
 type Content = {
   time: string,
@@ -28,16 +29,19 @@ function RecipeView(props: Recipe) {
           {recipe.title}
         </Link>
       </h2>
-      <ul className="pl-4 mt-2 list-item">{
-        content.ingredients?.map((ingredient:string) => {
-          return Ingredient(ingredient);
-        })
-      }</ul>
+      <div className="columns-3">
+        <CldImage className="rounded-xl" width="300" alt="breakfast" height="300" src="samples/breakfast.jpg"/>
+        <ul className="pl-4 mt-2 list-item">{
+          content.ingredients?.map((ingredient:string) => {
+            return Ingredient(ingredient);
+          })}
+        </ul>
+      </div>
       <div className="mt-8">{
         content.steps?.map((step:string,index:number) => {
           return Step(step,index);
-        })
-      }</div>
+        })}
+      </div>
     </div>
   );
 }
@@ -65,7 +69,7 @@ function TopView() {
     time: "20 min", 
     steps:["Provide necessary steps here..."], 
     difficulty: "easy",
-    ingredients: ["Any possible ingredient..."]
+    ingredients: ["Any possible ingredients..."]
   };
   return (
     <div className="flex w-full gap-3">
@@ -102,7 +106,7 @@ export default function Home() {
       <nav className="text-gray-800 border-b-2 border-slate-500 bg-stone-200 p-4 sticky top-0">
         <TopView/>
       </nav>
-      <main className="h-full overflow-auto bg-slate-800 p-4">
+      <main className="bg-slate-800 p-4">
         <Recipes/>
       </main>
     </>
