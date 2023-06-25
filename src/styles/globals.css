@@ -7,10 +7,9 @@ html {
 }
 
 body {
-  @apply h-full bg-slate-800 text-gray-50 text-lg;
+  @apply h-full bg-slate-800 text-gray-50 md:text-xl;
 }
 
 div#__next {
   @apply h-full;
 }
-
