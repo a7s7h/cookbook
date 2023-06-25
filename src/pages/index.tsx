@@ -6,6 +6,7 @@ import { useState } from "react";
 import { LoadingSpinner } from "~/components/loading";
 import { api, RouterOutputs } from "~/utils/api";
 import { CldImage } from "next-cloudinary";
+import { number } from "zod";
 
 type Content = {
   time: string;
@@ -23,8 +24,8 @@ function RecipeView(props: Recipe) {
   const recipe = props;
   const content: Content = parsePrisma(recipe.content);
   return (
-    <div className="pl-4 pr-4">
-      <h2 className="text-2xl md:text-4xl mb-4 mt-4 leading-loose font-normal text-pink-500">
+    <div key={recipe.id} className="pl-4 pr-4">
+      <h2 className="text-2xl md:text-4xl mb-4 mt-6 leading-loose font-normal text-pink-500">
         <Link href={`recipes/${recipe.id}`}>
           {recipe.title}
         </Link>
@@ -33,15 +34,15 @@ function RecipeView(props: Recipe) {
         <div className="shrink-0">
           <CldImage
             className="rounded-xl"
-            width="300"
-            height="300"
+            width={300}
+            height={300}
             alt=""
-            src="samples/breakfast.jpg"
+            src={recipe.image}
           />
         </div>
         <ul className="md:pl-4 mt-4 md:mt-0 list-item">
-          {content.ingredients?.map((ingredient: string) => {
-            return Ingredient(ingredient);
+          {content.ingredients?.map((ingredient: string, index: number) => {
+            return Ingredient(ingredient, index);
           })}
         </ul>
       </div>
@@ -54,27 +55,31 @@ function RecipeView(props: Recipe) {
   );
 }
 
-function Ingredient(ingredient: string) {
-  return <li className="md:pl-8">{ingredient}</li>;
+function Ingredient(ingredient: string, index: number) {
+  return <li key={index} className="md:pl-8">{ingredient}</li>;
 }
 
 function Step(step: string, index: number) {
   return (
-    <p className="mb-1 font-normal text-yellow-100">
+    <p key={index} className="mb-1 font-normal text-yellow-100">
       {index + 1}. {step}
     </p>
   );
 }
+
 function TopView() {
-  const { user } = useUser();
-  const [input, setInput] = useState("");
+  const { user, isSignedIn } = useUser();
   const ctx = api.useContext();
+  const [input, setInput] = useState("");
   const { mutate, isLoading: isPosting } = api.recipes.create.useMutation({
     onSuccess: () => {
       setInput("");
       void ctx.recipes.getAll.invalidate();
     },
   });
+  if (!isSignedIn) {
+    return <LoadingSpinner />;
+  }
   const content: Content = {
     time: "20 min",
     steps: ["Provide necessary steps here..."],
@@ -82,32 +87,40 @@ function TopView() {
     ingredients: ["Any possible ingredients..."],
   };
   return (
-    <div className="flex w-full gap-3">
-      <input
-        type="text"
-        placeholder="Type something here..."
-        className="bg-transparent grow outline-none"
-        value={input}
-        onChange={(e) => setInput(e.target.value)}
-        disabled={isPosting}
-      />
-      <button
-        className="bg-transparent hover:bg-pink-500 text-pink-700 font-semibold hover:text-white py-2 px-4 border border-pink-500 hover:border-transparent rounded"
-        onClick={() => mutate({ title: input, content: content })}
-      >
-        Post
-      </button>
-      <img src={user?.profileImageUrl} className="w-16 h-16 rounded-full" />
+    <div className="text-gray-800 bg-slate-200 pr-4 pl-4 pt-2 pb-2 w-full sticky top-0">
+      <div className="flex gap-3">
+        <input
+          type="text"
+          placeholder="Type something here..."
+          className="bg-transparent grow outline-none"
+          value={input}
+          onChange={(e) => setInput(e.target.value)}
+          disabled={isPosting}
+        />
+        <button
+          className="bg-transparent hover:bg-pink-500 text-pink-700 font-semibold hover:text-white py-2 px-4 border border-pink-500 hover:border-transparent rounded"
+          onClick={() =>
+            mutate({
+              title: input,
+              image: "samples/breakfast.jpg",
+              content: content,
+            })}
+          disabled={isPosting}
+        >
+          Post
+        </button>
+        <img src={user?.profileImageUrl} className="w-12 h-12 rounded-full" />
+      </div>
     </div>
   );
 }
 
 function Recipes() {
   const { isSignedIn } = useUser();
+  const { data, isLoading } = api.recipes.getAll.useQuery();
   if (!isSignedIn) {
     return null;
   }
-  const { data, isLoading } = api.recipes.getAll.useQuery();
   if (isLoading) {
     return LoadingSpinner();
   }
@@ -122,10 +135,8 @@ export default function Home() {
         <meta name="description" content="Ash's best recipes" />
         <link rel="icon" href="/favicon.ico" />
       </Head>
-      <nav className="text-gray-800 border-b-2 border-slate-500 bg-stone-200 p-4 sticky top-0">
-        <TopView />
-      </nav>
-      <main className="bg-slate-800 p-4">
+      <TopView />
+      <main className="bg-slate-900 p-4">
         <Recipes />
       </main>
     </>

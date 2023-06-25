@@ -16,6 +16,7 @@ export const recipeRouter = createTRPCRouter({
 
   create: privateProcedure.input(z.object({
     title: z.string(),
+    image: z.string(),
     content: z.object({
       time: z.string(),
       steps: z.array(z.string()),
@@ -30,6 +31,7 @@ export const recipeRouter = createTRPCRouter({
       const recipe = await ctx.prisma.recipe.create({
         data: {
           title: input.title,
+          image: input.image,
           content: input.content,
         },
       });
