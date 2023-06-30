@@ -6,7 +6,7 @@ import { api, RouterOutputs } from "~/utils/api";
 import { CldImage } from "next-cloudinary";
 
 type Recipe = RouterOutputs["recipes"]["getAll"][number];
-type Ingredient =
+type IngredientType =
   RouterOutputs["recipes"]["getAll"][number]["ingredients"][number];
 
 function RecipeView(props: Recipe) {
@@ -38,7 +38,7 @@ function RecipeView(props: Recipe) {
   );
 }
 
-function IngredientView(ingredient: Ingredient, index: number) {
+function IngredientView(ingredient: IngredientType, index: number) {
   return (
     <li key={index} className="md:pl-8">
       {ingredient.quantity != 0 && (
