@@ -1,12 +1,11 @@
 import { useUser } from "@clerk/nextjs";
-import { Ingredient, Prisma } from "@prisma/client";
 import Link from "next/link";
 import { LoadingSpinner } from "~/components/loading";
 import { api, RouterOutputs } from "~/utils/api";
 import { CldImage } from "next-cloudinary";
 
 type Recipe = RouterOutputs["recipes"]["getAll"][number];
-type IngredientType =
+type Ingredient =
   RouterOutputs["recipes"]["getAll"][number]["ingredients"][number];
 
 function RecipeView(props: Recipe) {
@@ -30,7 +29,7 @@ function RecipeView(props: Recipe) {
         </div>
         <ul className="md:pl-4 mt-4 md:mt-0 list-item">
           {recipe.ingredients?.map((ingredient: Ingredient, index: number) => {
-            return IngredientView(ingredient, index);
+            return Ingredient(ingredient, index);
           })}
         </ul>
       </div>
@@ -38,7 +37,7 @@ function RecipeView(props: Recipe) {
   );
 }
 
-function IngredientView(ingredient: IngredientType, index: number) {
+function Ingredient(ingredient: Ingredient, index: number) {
   return (
     <li key={index} className="md:pl-8">
       {ingredient.quantity != 0 && (
