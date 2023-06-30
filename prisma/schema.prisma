@@ -11,12 +11,50 @@ datasource db {
 }
 
 model Recipe {
+    id          String   @id @default(cuid())
+    createdAt   DateTime @default(now())
+    updatedAt   DateTime @updatedAt
+    title       String
+    subTitle    String?  
+    difficulty  Float  
+    time        String?  
+    image       String?
+    content     String
+
+    ingredients RecipeIngredient[]
+}
+
+model RecipeIngredient {
+    recipeId     String
+    ingredientId String  
+    createdAt    DateTime @default(now())
+    quantity     Float
+    recipe       Recipe @relation(fields: [recipeId], references: [id], onDelete: Cascade)
+    ingredient   Ingredient @relation(fields: [ingredientId], references: [id], onDelete: Cascade)
+    @@id([recipeId,ingredientId])
+    @@index([ingredientId])
+    @@index([recipeId])
+}
+
+model Ingredient {
     id        String   @id @default(cuid())
     createdAt DateTime @default(now())
-    updatedAt DateTime @updatedAt
-    title     String
-    difficulty Float @default(1.0)
-    time      String  @default("15 min")
-    image     String  @default("")
-    content   Json   @db.Json
+    name      String
+    namePlural String? 
+    unitId    String
+
+    unit QuantityUnit @relation(fields: [unitId], references: [id], onDelete: Cascade)
+    recipeIngredients RecipeIngredient[]
+
+    @@index([unitId])
+    @@index([name])
 }
+
+model QuantityUnit {
+  id        String @id @default(cuid())
+  createdAt DateTime @default(now())
+  name      String
+
+  ingredients Ingredient[]
+}
+

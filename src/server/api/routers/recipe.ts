@@ -8,6 +8,9 @@ import {
 export const recipeRouter = createTRPCRouter({
   getAll: publicProcedure.query(({ ctx }) => {
     return ctx.prisma.recipe.findMany({
+      include: {
+        ingredients: { include: { ingredient: { include: { unit: true } } } },
+      },
       orderBy: [
         { createdAt: "desc" },
       ],
@@ -19,10 +22,7 @@ export const recipeRouter = createTRPCRouter({
     difficulty: z.number(),
     time: z.string(),
     image: z.string(),
-    content: z.object({
-      steps: z.array(z.string()),
-      ingredients: z.array(z.string()),
-    }),
+    content: z.string(),
   }))
     .mutation(async ({ ctx, input }) => {
       if (input.title != "Pasta") {
