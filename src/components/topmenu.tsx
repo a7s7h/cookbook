@@ -16,16 +16,12 @@ export function TopMenu() {
   if (!isSignedIn) {
     return <LoadingSpinner />;
   }
-  const content: Content = {
-    steps: ["Provide necessary steps here..."],
-    ingredients: ["Any possible ingredients..."],
-  };
   const recipeDB = {
     title: input,
     difficulty: 1.5,
     time: "15 min",
     image: "samples/breakfast.jpg",
-    content: content,
+    content: "",
   };
   return (
     <div className="text-gray-800 bg-slate-200 pr-4 pl-4 pt-2 pb-2 w-full sticky top-0">
