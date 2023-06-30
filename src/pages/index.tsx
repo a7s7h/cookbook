@@ -30,7 +30,7 @@ function RecipeView(props: Recipe) {
         </div>
         <ul className="md:pl-4 mt-4 md:mt-0 list-item">
           {recipe.ingredients?.map((ingredient: Ingredient, index: number) => {
-            return Ingredient(ingredient, index);
+            return IngredientView(ingredient, index);
           })}
         </ul>
       </div>
@@ -38,7 +38,7 @@ function RecipeView(props: Recipe) {
   );
 }
 
-function Ingredient(ingredient: Ingredient, index: number) {
+function IngredientView(ingredient: Ingredient, index: number) {
   return (
     <li key={index} className="md:pl-8">
       {ingredient.quantity != 0 && (
