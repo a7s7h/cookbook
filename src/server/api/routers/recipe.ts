@@ -1,4 +1,4 @@
-import { z } from "zod";
+import { number, z } from "zod";
 import {
   createTRPCRouter,
   privateProcedure,
@@ -9,6 +9,9 @@ export const recipeRouter = createTRPCRouter({
   getAll: publicProcedure.query(({ ctx }) => {
     return ctx.prisma.recipe.findMany({
       include: {
+        methods: {
+          orderBy: [{ number: "asc" }],
+        },
         ingredients: { include: { ingredient: { include: { unit: true } } } },
       },
       orderBy: [
@@ -34,7 +37,6 @@ export const recipeRouter = createTRPCRouter({
           difficulty: input.difficulty,
           time: input.time,
           image: input.image,
-          content: input.content,
         },
       });
       return recipe;

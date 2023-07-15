@@ -1,12 +1,13 @@
 import { useUser } from "@clerk/nextjs";
 import Link from "next/link";
 import { LoadingSpinner } from "~/components/loading";
-import { api, RouterOutputs } from "~/utils/api";
+import { api, type RouterOutputs } from "~/utils/api";
 import { CldImage } from "next-cloudinary";
 
 type Recipe = RouterOutputs["recipes"]["getAll"][number];
 type Ingredient =
   RouterOutputs["recipes"]["getAll"][number]["ingredients"][number];
+type Method = RouterOutputs["recipes"]["getAll"][number]["methods"][number];
 
 function RecipeView(props: Recipe) {
   const recipe = props;
@@ -33,8 +34,17 @@ function RecipeView(props: Recipe) {
           })}
         </ul>
       </div>
+      <div className="mt-4 text-yellow-500">
+        {recipe.methods?.map((method: Method) => {
+          return Method(method);
+        })}
+      </div>
     </div>
   );
+}
+
+function Method(method: Method) {
+  return <p className="py-2">{method.number}. {method.content}</p>;
 }
 
 function Ingredient(ingredient: Ingredient, index: number) {
@@ -43,7 +53,8 @@ function Ingredient(ingredient: Ingredient, index: number) {
       {ingredient.quantity != 0 && (
         <span className="mr-1">{ingredient.quantity}</span>
       )}
-      {ingredient.ingredient.unit != null && (
+      {ingredient.ingredient.unit != null &&
+        ingredient.ingredient.unit.name != "" && (
         <span className="mr-1">{ingredient.ingredient.unit.name}</span>
       )}
       <span>

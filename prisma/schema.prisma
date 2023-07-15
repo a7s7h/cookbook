@@ -19,9 +19,20 @@ model Recipe {
     difficulty  Float  
     time        String?  
     image       String?
-    content     String
 
     ingredients RecipeIngredient[]
+    methods     Method[]
+}
+
+model Method {
+  recipeId String
+  number   Int
+  content  String @db.Text
+
+  recipe  Recipe @relation(fields: [recipeId], references: [id], onDelete: Cascade)
+
+  @@id([recipeId,number])
+  @@index([recipeId])
 }
 
 model RecipeIngredient {
